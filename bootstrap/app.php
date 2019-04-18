@@ -85,7 +85,7 @@ $app->singleton(
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
@@ -94,6 +94,7 @@ $app->singleton(
 define('APP_PATH', dirname(__DIR__));
 $traceId = str_replace('-', '', Ramsey\Uuid\Uuid::uuid1()->toString());
 define('LOG_TRACE_ID', $traceId);         // 日志追踪标记
+define('CURRENT_API', getURI());          // 用常量记录当前请求的API,方便重复使用
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
