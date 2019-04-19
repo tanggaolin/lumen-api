@@ -10,7 +10,9 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$app->get('/', function () use ($app) {
+    return response('403. Forbidden', 403);
 });
+
+//登录验证
+$app->addRoute(['GET', 'POST'], '/auth/login', 'AuthController@login');
