@@ -6,7 +6,6 @@ $error = $logPath . '/error/error.log';
 $db = $logPath . '/sql/sql.log';
 $ts = $logPath . '/ts//ts.log';
 $job = $logPath . '/job/job.log';
-var_dump($logPath);
 return [
     'default' => env('LOG_CHANNEL', 'stack'),
     'channels' => [

@@ -18,7 +18,7 @@ class Controller extends BaseController
     }
 
     // 接口默认返回数据
-    protected $result = ['code' => 0, 'msg' => 'ok', 'data' => []];
+    protected $result = ['code' => 0, 'msg' => 'ok', 'data' => [], "rid" => LOG_TRACE_ID];
 
     // 参数校验错误信息
     protected $validationMsg = [

@@ -68,15 +68,10 @@ class Handler extends ExceptionHandler
             return response('403. Forbidden', 403);
         }
 
-        // 本地环境直接输出错误
-        if (app()->environment('local')) {
-            return parent::render($request, $exception);
-        }
-
         //测试环境输出错误日志
         if (app()->environment('qa')) {
             $code = $exception->getCode() ?? -1;
-            $data = ['code' => $code, 'msg' => $exception->getMessage(), 'trace' => $this->getTopTrace($e)];
+            $data = ['code' => $code, 'msg' => $exception->getMessage(), 'trace' => $this->getTopTrace($exception)];
             return response()->json($data);
         }
         // 自定义错误信息展示出来
@@ -99,7 +94,6 @@ class Handler extends ExceptionHandler
         $str = $e->getTraceAsString();
         $arr = explodeX(PHP_EOL . '#', $str);
         $num = min(10, count($arr));
-
         return array_slice($arr, 0, $num);
     }
 
@@ -127,7 +121,6 @@ class Handler extends ExceptionHandler
             E_DEPRECATED        => 'E_DEPRECATED',
             E_USER_DEPRECATED   => 'E_USER_DEPRECATED',
         ];
-
         return $n ? ($map[$n] ?? '') : $map;
     }
 }

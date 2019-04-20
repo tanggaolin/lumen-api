@@ -23,12 +23,17 @@ class AuthController extends Controller
     public function login(Request $r)
     {
         $this->checkParam($r, [
-            'token'    => 'required|string',
-            'password' => 'required|string'
+            'username' => 'required|string',
+            'password'  => 'required|string'
         ]);
         $username             = $r->input('username');
         $password             = trim($r->input('password'));
         $this->result['data'] = (new UserLogic())->login($username, $password);
+        return response()->json($this->result);
+    }
+
+    public function loginInfo() {
+        $this->result["data"] = getv("user_info");
         return response()->json($this->result);
     }
 

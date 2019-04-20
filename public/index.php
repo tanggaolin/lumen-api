@@ -12,8 +12,6 @@
 */
 
 $_ENV['_TS_']['_START_'] = microtime(true); //开始时间打点
-echo $_ENV['_TS_']['_START_'];
-echo PHP_EOL;
 $app = require __DIR__.'/../bootstrap/app.php';
 
 /*

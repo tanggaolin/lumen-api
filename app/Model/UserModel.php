@@ -32,20 +32,4 @@ class UserModel extends Model
         return $res ? $res->toArray() : [];
     }
 
-    // @TODO
-    public function createOne(array $data): bool
-    {
-        $user      = new UserModel($data);
-        $checkUser = $this->where("mobile", $user->mobile)->first();
-        if ($checkUser) {
-            if ($checkUser->status == 'DELETE') {
-                $checkUser->delete();
-            } else {
-                throw new CustomException(ErrorType::LOGIC_ERROR, '该用户已经存在');
-            }
-        }
-        $user->id = $checkUser->id;
-        return $user->save();
-    }
-
 }

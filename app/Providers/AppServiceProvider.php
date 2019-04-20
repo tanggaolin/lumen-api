@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         //记录SQL-log
-        if (config('database.log', false)) {
+        if (env('DB_LOG', false)) {
             \DB::listen(function ($query) {
                 $sql = str_replace("?", "'%s'", $query->sql);
                 $sql = vsprintf($sql, $query->bindings) . " | {$query->time}";

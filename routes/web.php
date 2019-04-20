@@ -15,4 +15,9 @@ $app->get('/', function () use ($app) {
 });
 
 //登录验证
-$app->addRoute(['GET', 'POST'], '/auth/login', 'AuthController@login');
+$app->addRoute(['GET', 'POST'], 'api/auth/login', 'AuthController@login');
+
+//中间件
+$app->group(['prefix' => 'api', 'middleware' => 'web'], function () use ($app) {
+    $app->addRoute(['GET'], '/login_info', 'AuthController@loginInfo');
+});

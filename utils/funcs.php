@@ -17,6 +17,26 @@ function getURI(): string
     return $path;
 }
 
+/**
+ * 设置全局环境变量
+ * @param string $key
+ * @param        $value
+ */
+function setv(string $key, $value)
+{
+    $_ENV[SYS_VARS][$key] = $value;
+}
+
+/**
+ * 获取该项目的全局变量
+ * @param string $key
+ * @return null
+ */
+function getv(string $key)
+{
+    return $_ENV[SYS_VARS][$key] ?? null;
+}
+
 // @TODO
 function arrayFilter(array $attr, array $keys): array
 {

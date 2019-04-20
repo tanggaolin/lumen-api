@@ -63,13 +63,9 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+ $app->routeMiddleware([
+     'web' => App\Http\Middleware\WebMiddleware::class,
+ ]);
 
 // 加载自定义配置文件
 //$app->configure('app');
@@ -85,13 +81,15 @@ $app->singleton(
 |
 */
 
- $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
 
 
 //自定义常用的系统常量
 define('APP_PATH', dirname(__DIR__));
+define('SYS_VARS', 'API_VARS');      // 系统全局变量在$_ENV中的key
+$_ENV[SYS_VARS] = null;              // 进程内全局数组变量
+
 $traceId = str_replace('-', '', Ramsey\Uuid\Uuid::uuid1()->toString());
 define('LOG_TRACE_ID', $traceId);         // 日志追踪标记
 define('CURRENT_API', getURI());          // 用常量记录当前请求的API,方便重复使用
@@ -109,7 +107,7 @@ define('CURRENT_API', getURI());          // 用常量记录当前请求的API,�
 define('ROUTE_FILE', ['web']);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
-], function ($router) {
+], function ($app) {
     foreach (ROUTE_FILE as $file) {
         require base_path("routes/{$file}.php");
     }
