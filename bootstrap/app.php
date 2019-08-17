@@ -4,9 +4,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 //配置运行环境
 $envFile = '.env';
-if ($env = get_cfg_var('env')) {
-    $envFile = sprintf("%s.%s", $envFile, $env);
-}
+$env = get_cfg_var('env') ?: getenv('APP_ENV') ?: (getopt('', ["env::"])['env'] ?? 'alpha');
+$envFile = sprintf("%s.%s", $envFile, $env);
+
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__) . "/env",
     $envFile
@@ -62,6 +62,12 @@ $app->singleton(
 | route or middleware that'll be assigned to some specific routes.
 |
 */
+
+//全局中间
+$app->middleware([
+    App\Http\Middleware\CorsMiddleware::class,
+]);
+
 
  $app->routeMiddleware([
      'web' => App\Http\Middleware\WebMiddleware::class,

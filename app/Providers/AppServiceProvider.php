@@ -47,8 +47,6 @@ class AppServiceProvider extends ServiceProvider
     public function shutdown()
     {
         $shutdown    = microtime(true);
-        echo  $shutdown;
-        echo PHP_EOL;
         $logInfo     = str_pad(CURRENT_API, 28);
         $_BOOT       = ($_ENV["_TS_"]["_BOOT_"] - $_ENV["_TS_"]["_START_"]) * 1000;
         $_CTRL_START = ($_ENV["_TS_"]["_CTRL_START_"] - $_ENV["_TS_"]["_START_"]) * 1000;
