@@ -4,7 +4,7 @@ $logPath = rtrim(env('LOG_PATH', '/tmp'), '/') . DIRECTORY_SEPARATOR . env("APP_
 $runtime = $logPath . '/runtime/runtime.log';
 $error = $logPath . '/error/error.log';
 $db = $logPath . '/sql/sql.log';
-$ts = $logPath . '/ts//ts.log';
+$ts = $logPath . '/ts/ts.log';
 $job = $logPath . '/job/job.log';
 return [
     'default' => env('LOG_CHANNEL', 'stack'),
@@ -17,6 +17,7 @@ return [
         'runtime-daily' => [
             'driver' => 'daily',
             'path' => $runtime,
+            'tap' => [App\Logging\LogFormat::class],
             'level' => 'debug',
             'name' => LOG_TRACE_ID,
             'days' => 30,

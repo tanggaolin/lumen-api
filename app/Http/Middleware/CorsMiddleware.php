@@ -1,13 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gaolintang
- * Date: 2019/8/17
- * Time: 6:36 PM
- */
+
+namespace App\Traits;
 
 namespace App\Http\Middleware;
 
+use App\Logging\JsonFormatter;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +17,6 @@ class CorsMiddleware
         $headers = [];
         $origin = $request->server('HTTP_HOST');
         $allowOriginArr = explode(',', env('ACCESS_ALLOW_ORIGIN', ''));
-        //判断是否是允许跨域的地址或者全部允许跨域
         if (
             !empty($allowOriginArr) &&
             (in_array($origin, $allowOriginArr) || env('ACCESS_ALLOW_ORIGIN') == '*')
@@ -38,25 +34,31 @@ class CorsMiddleware
                 return response('', 200, $headers);
             }
         }
-
         $response = $next($request);
         foreach ($headers as $key => $value) {
             $response->header($key, $value);
         }
-
         return $response;
     }
 
 
     public function terminate(Request $request, Response $response)
     {
-        //记录请求参数和的返回日志
+        //OPTIONS 请求不落日志
+        if ($request->isMethod('OPTIONS')) {
+            return;
+        }
+        $shutdown = microtime(true);
+        $ts = ($shutdown - $_ENV["_TS_"]["_START_"]) * 1000;
         $logData = [
-            "ip" =>$request->ip(),
-            "params" =>$request->all(),
-            "response" =>$response->getContent()
+            "mode" => JsonFormatter::MODE_API_LOG,
+            "method" => $request->method(),
+            "req" => $request->all(),
+            "rsp" => json_decode($response->getContent(), true),
+            "ts" => intval($ts),
+            "ip" => $request->ip(),
         ];
-        Log::info("[{$request->method()}] request api: {$request->path()}}", $logData);
+        Log::info(JsonFormatter::MODE_API_LOG, $logData);
     }
 
 }

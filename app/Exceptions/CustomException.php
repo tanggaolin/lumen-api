@@ -27,11 +27,11 @@ class ErrorType
     const LOGIC_ERROR = 501;   //通用逻辑错误
 
     private static $errorMsg = [
-        self::SUCCESS       => 'OK',
+        self::SUCCESS => 'OK',
         self::INVALID_PARAM => '参数错误',
-        self::ACCESS_DENY   => '无权访问',
+        self::ACCESS_DENY => '无权访问',
         self::PROCESS_ERROR => '系统错误',
-        self::LOGIC_ERROR   => '通用逻辑错误',
+        self::LOGIC_ERROR => '通用逻辑错误',
     ];
 
     public static function msg(int $code)

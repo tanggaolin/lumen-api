@@ -12,6 +12,11 @@
  */
 function getURI(): string
 {
+    if (!isset($_SERVER['REQUEST_URI'])) {
+        global $argv;
+        $cliName = $argv[1] ?? "";
+        return $cliName;
+    }
     $path = explode('?', $_SERVER['REQUEST_URI'])[0];
     $path = '/' . strtolower(trim($path, '/ '));
     return $path;

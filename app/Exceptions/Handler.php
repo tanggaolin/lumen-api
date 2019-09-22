@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
         $str = sprintf("%s\nFile: %s:%d\nTRACE: %s", $exception->getMessage(), $exception->getFile(),
             $exception->getLine(),
             $exception->getTraceAsString());
-        Log::channel('error-daily')->error($severity . $str);
+        Log::error($severity . $str);
     }
 
     /**
