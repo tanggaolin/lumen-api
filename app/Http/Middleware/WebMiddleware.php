@@ -21,7 +21,7 @@ class WebMiddleware
     /**
      * Create a new middleware instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Factory $auth
+     * @param  \Illuminate\Contracts\Auth\Factory  $auth
      */
     public function __construct(Auth $auth)
     {
@@ -30,21 +30,23 @@ class WebMiddleware
 
     /**
      * Handle an incoming request.
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @param  string|null $guard
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string|null  $guard
+     *
      * @return mixed
      * @throws CustomException
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
         $token = $request->input('token');
-        if(empty($token)) {
+        if (empty($token)) {
             $info = $request->headers->all();
             $token = $info['authorization'][0] ?? '';
         }
         //验证token
-        if(empty($token)) {
+        if (empty($token)) {
             throw new CustomException(ErrorType::ACCESS_DENY);
         }
         $data = json_decode(Redis::get($token), true);

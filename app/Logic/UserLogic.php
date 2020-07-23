@@ -20,8 +20,10 @@ class UserLogic
 
     /**
      * 用户登录验证
-     * @param string $username
-     * @param string $password
+     *
+     * @param  string  $username
+     * @param  string  $password
+     *
      * @return array
      * @throws CustomException
      */
@@ -29,10 +31,12 @@ class UserLogic
     {
         //普通管理员登录
         $userInfo = (new UserModel())->getOne(["mobile" => $mobile]);
-        if (!$userInfo || in_array($userInfo['status'], ["OFF", "DELETE"])) { //邮箱不存在
+        if (!$userInfo
+            || in_array($userInfo['status'], ["OFF", "DELETE"])
+        ) { //邮箱不存在
             throw new CustomException(ErrorType::LOGIC_ERROR, '用户名密码不匹配');
         }
-        $password = md5($password . $userInfo['salt']);
+        $password = md5($password.$userInfo['salt']);
         if ($userInfo['passwd'] != $password) { //用户名密码不匹配
             throw new CustomException(ErrorType::LOGIC_ERROR, '用户名密码不匹配');
         }
@@ -44,7 +48,9 @@ class UserLogic
 
     /**
      * 执行登录操作(设置 session)
-     * @param array $admin
+     *
+     * @param  array  $admin
+     *
      * @return array
      * @throws CustomException
      */
@@ -55,13 +61,15 @@ class UserLogic
             'id'          => $userInfo['id'],
             'mobile'      => $userInfo['mobile'],
             'name'        => $userInfo['name'],
-            'first_login' => $userInfo['extra'] && ($userInfo['extra'] == 'FIRST_LOGIN') //判断用户或管理员是否是第一次登录
+            'first_login' => $userInfo['extra']
+                && ($userInfo['extra'] == 'FIRST_LOGIN') //判断用户或管理员是否是第一次登录
         ];
         $cache = [
             'user_info' => $ret,
         ];
         // 设置缓存数据(session)
-        Redis::setex($ret['token'], self::SECONDS_IN_A_DAY * 2, json_encode($cache));
+        Redis::setex($ret['token'], self::SECONDS_IN_A_DAY * 2,
+            json_encode($cache));
         return $ret;
     }
 

@@ -18,14 +18,15 @@ class CorsMiddleware
         $origin = $request->server('HTTP_HOST');
         $allowOriginArr = explode(',', env('ACCESS_ALLOW_ORIGIN', ''));
         if (
-            !empty($allowOriginArr) &&
-            (in_array($origin, $allowOriginArr) || env('ACCESS_ALLOW_ORIGIN') == '*')
+            !empty($allowOriginArr)
+            && (in_array($origin, $allowOriginArr)
+                || env('ACCESS_ALLOW_ORIGIN') == '*')
         ) {
             if (env('ACCESS_ALLOW_ORIGIN') == '*') {
                 $origin = '*';
             }
             $headers = [
-                'Access-Control-Allow-Origin' => $origin,
+                'Access-Control-Allow-Origin'  => $origin,
                 'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
                 'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-Requested-With, mid'
             ];
@@ -51,12 +52,12 @@ class CorsMiddleware
         $shutdown = microtime(true);
         $ts = ($shutdown - $_ENV["_TS_"]["_START_"]) * 1000;
         $logData = [
-            "mode" => JsonFormatter::MODE_API_LOG,
+            "mode"   => JsonFormatter::MODE_API_LOG,
             "method" => $request->method(),
-            "req" => $request->all(),
-            "rsp" => json_decode($response->getContent(), true),
-            "ts" => intval($ts),
-            "ip" => $request->ip(),
+            "req"    => $request->all(),
+            "rsp"    => json_decode($response->getContent(), true),
+            "ts"     => intval($ts),
+            "ip"     => $request->ip(),
         ];
         Log::info(JsonFormatter::MODE_API_LOG, $logData);
     }

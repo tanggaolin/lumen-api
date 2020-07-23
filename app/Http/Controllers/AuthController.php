@@ -16,7 +16,9 @@ class AuthController extends Controller
 
     /**
      * 用户登录
-     * @param Request $r
+     *
+     * @param  Request  $r
+     *
      * @return \Illuminate\Http\JsonResponse
      * @throws CustomException
      */
@@ -24,15 +26,16 @@ class AuthController extends Controller
     {
         $this->checkParam($r, [
             'username' => 'required|string',
-            'password'  => 'required|string'
+            'password' => 'required|string'
         ]);
-        $username             = $r->input('username');
-        $password             = trim($r->input('password'));
+        $username = $r->input('username');
+        $password = trim($r->input('password'));
         $this->result['data'] = (new UserLogic())->login($username, $password);
         return response()->json($this->result);
     }
 
-    public function loginInfo() {
+    public function loginInfo()
+    {
         $this->result["data"] = getv("user_info");
         return response()->json($this->result);
     }

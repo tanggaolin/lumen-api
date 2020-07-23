@@ -19,24 +19,28 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        AuthorizationException::class,
-        HttpException::class,
-        ModelNotFoundException::class,
-        ValidationException::class,
-    ];
+    protected $dontReport
+        = [
+            AuthorizationException::class,
+            HttpException::class,
+            ModelNotFoundException::class,
+            ValidationException::class,
+        ];
 
     /**
      * Report or log an exception.
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception $exception
+     * @param  \Exception  $exception
+     *
      * @return void
      */
     public function report(Exception $exception)
     {
-        if ($exception instanceof NotFoundHttpException or $exception instanceof CustomException) {
+        if ($exception instanceof NotFoundHttpException or $exception instanceof
+            CustomException
+        ) {
             return;
         }
         $severity = '';
@@ -44,17 +48,19 @@ class Handler extends ExceptionHandler
             $severity = $this->errorSeverityMap($exception->getSeverity());
             $severity = sprintf("#%s#: ", $severity);
         }
-        $str = sprintf("%s\nFile: %s:%d\nTRACE: %s", $exception->getMessage(), $exception->getFile(),
+        $str = sprintf("%s\nFile: %s:%d\nTRACE: %s", $exception->getMessage(),
+            $exception->getFile(),
             $exception->getLine(),
             $exception->getTraceAsString());
-        Log::error($severity . $str);
+        Log::error($severity.$str);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Exception $exception
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $exception
+     *
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
     public function render($request, Exception $exception)
@@ -71,12 +77,18 @@ class Handler extends ExceptionHandler
         //测试环境输出错误日志
         if (app()->environment('qa')) {
             $code = $exception->getCode() ?? -1;
-            $data = ['code' => $code, 'msg' => $exception->getMessage(), 'trace' => $this->getTopTrace($exception)];
+            $data = [
+                'code'  => $code, 'msg' => $exception->getMessage(),
+                'trace' => $this->getTopTrace($exception)
+            ];
             return response()->json($data);
         }
         // 自定义错误信息展示出来
         if ($exception instanceof CustomException) {
-            $data = ['code' => $exception->getCode(), 'msg' => $exception->getMessage()];
+            $data = [
+                'code' => $exception->getCode(),
+                'msg'  => $exception->getMessage()
+            ];
             return response()->json($data);
         }
         // 未知的错误信息
@@ -86,20 +98,24 @@ class Handler extends ExceptionHandler
 
     /**
      * 获取top错误跟踪信息
-     * @param Exception $e
+     *
+     * @param  Exception  $e
+     *
      * @return array
      */
     private function getTopTrace(\Exception $e)
     {
         $str = $e->getTraceAsString();
-        $arr = explodeX(PHP_EOL . '#', $str);
+        $arr = explodeX(PHP_EOL.'#', $str);
         $num = min(10, count($arr));
         return array_slice($arr, 0, $num);
     }
 
     /**
      * php內建错误级别
-     * @param int $n
+     *
+     * @param  int  $n
+     *
      * @return array|mixed|string
      */
     private function errorSeverityMap(int $n)

@@ -26,7 +26,8 @@ class AppServiceProvider extends ServiceProvider
 
         // 设置错误级别
         if (app()->environment('prod')) {
-            error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
+            error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED
+                & ~E_WARNING);
         } else {
             error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
         }
@@ -35,10 +36,10 @@ class AppServiceProvider extends ServiceProvider
         if (env('DB_LOG', false)) {
             \DB::listen(function ($query) {
                 $sql = str_replace("?", "'%s'", $query->sql);
-                $sql = vsprintf($sql, $query->bindings) . " | {$query->time}";
+                $sql = vsprintf($sql, $query->bindings)." | {$query->time}";
                 Log::channel('sql-daily')->info($sql);
                 if ($query->time > 100) {
-                    Log::warning('SLOOOOOW-SQL: ' . $sql);
+                    Log::warning('SLOOOOOW-SQL: '.$sql);
                 }
             });
         }
@@ -46,12 +47,14 @@ class AppServiceProvider extends ServiceProvider
 
     public function shutdown()
     {
-        $shutdown    = microtime(true);
-        $logInfo     = str_pad(CURRENT_API, 28);
-        $_BOOT       = ($_ENV["_TS_"]["_BOOT_"] - $_ENV["_TS_"]["_START_"]) * 1000;
-        $_CTRL_START = ($_ENV["_TS_"]["_CTRL_START_"] - $_ENV["_TS_"]["_START_"]) * 1000;
-        $_SHUTDOWN   = ($shutdown - $_ENV["_TS_"]["_START_"]) * 1000;
-        $logInfo     .= sprintf(" BOOT:%d CTRL_START:%d SHUTDOWN:%d", intval($_BOOT), intval($_CTRL_START),
+        $shutdown = microtime(true);
+        $logInfo = str_pad(CURRENT_API, 28);
+        $_BOOT = ($_ENV["_TS_"]["_BOOT_"] - $_ENV["_TS_"]["_START_"]) * 1000;
+        $_CTRL_START = ($_ENV["_TS_"]["_CTRL_START_"]
+                - $_ENV["_TS_"]["_START_"]) * 1000;
+        $_SHUTDOWN = ($shutdown - $_ENV["_TS_"]["_START_"]) * 1000;
+        $logInfo .= sprintf(" BOOT:%d CTRL_START:%d SHUTDOWN:%d",
+            intval($_BOOT), intval($_CTRL_START),
             intval($_SHUTDOWN));
         Log::channel('ts-daily')->info($logInfo);
 
