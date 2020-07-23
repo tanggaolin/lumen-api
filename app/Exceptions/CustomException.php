@@ -1,7 +1,6 @@
 <?php
 /**
  * Description: 自定义异常类
- * Author: yaoqianpeng<yaoqianpeng@cmcm.com>
  * Date: 2018-03-29
  */
 

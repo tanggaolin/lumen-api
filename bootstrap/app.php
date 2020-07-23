@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
-
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../utils/funcs.php';
 //配置运行环境
 $envFile = '.env';
 $env = get_cfg_var('env') ?: getenv('APP_ENV') ?: (getopt('', ["env::"])['env'] ?? 'alpha');
@@ -69,9 +69,9 @@ $app->middleware([
 ]);
 
 
- $app->routeMiddleware([
-     'web' => App\Http\Middleware\WebMiddleware::class,
- ]);
+$app->routeMiddleware([
+    'web' => App\Http\Middleware\WebMiddleware::class,
+]);
 
 // 加载自定义配置文件
 //$app->configure('app');
@@ -110,13 +110,10 @@ define('CURRENT_API', getURI());          // 用常量记录当前请求的API,�
 |
 */
 
-define('ROUTE_FILE', ['web']);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($app) {
-    foreach (ROUTE_FILE as $file) {
-        require base_path("routes/{$file}.php");
-    }
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

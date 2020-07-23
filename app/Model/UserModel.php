@@ -7,8 +7,6 @@
 
 namespace App\Model;
 
-use App\Exceptions\CustomException;
-use App\Exceptions\ErrorType;
 use Illuminate\Database\Eloquent\Model;
 
 class UserModel extends Model
